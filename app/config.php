@@ -1,8 +1,8 @@
 <?php
 
 use function DI\create;
-use SuperBlog\Model\ArticleRepository;
-use SuperBlog\Persistence\InMemoryArticleRepository;
+use App\Model\ArticleRepository;
+use App\Persistence\InMemoryArticleRepository;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -12,7 +12,7 @@ return [
 
     // Configure Twig
     Environment::class => function () {
-        $loader = new FilesystemLoader(__DIR__ . '/../src/SuperBlog/Views');
+        $loader = new FilesystemLoader(__DIR__ . '/../src/Views');
         return new Environment($loader);
     },
 ];

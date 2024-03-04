@@ -5,11 +5,18 @@ use FastRoute\RouteCollector;
 $container = require __DIR__ . '/../app/bootstrap.php';
 
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
-    $r->addRoute('GET', '/', 'SuperBlog\Controller\HomeController');
-    $r->addRoute('GET', '/article/{id}', ['SuperBlog\Controller\ArticleController', 'show']);
+    $r->addRoute('GET', '/', ['App\Controller\HomeController','index']);
+    $r->addRoute('GET', '/{uid}', ['App\Controller\HomeController', 'get']);
+    $r->addRoute('GET', '/categories/{id}', ['App\Controller\HomeController', 'getByCategory']);
 });
 
-$route = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+$uri = $_SERVER['REQUEST_URI'];
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
+}
+$uri = rawurldecode($uri);
+
+$route = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $uri);
 
 switch ($route[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:

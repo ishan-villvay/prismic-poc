@@ -7,7 +7,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SuperBlog\\": "src/SuperBlog/"
+            "App\\": "src/"
         }
     },
     "require": {
@@ -15,6 +15,8 @@
         "php-di/php-di": "^6.0",
         "nikic/fast-route": "~0.5.0",
         "mnapoli/silly": "^1.7",
-        "twig/twig": "^3.2"
+        "twig/twig": "^3.2",
+        "prismic/php-sdk": "^5.3",
+        "nesbot/carbon": "^3.0"
     }
 }

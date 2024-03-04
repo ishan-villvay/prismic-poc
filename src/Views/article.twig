@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Blog Template · Bootstrap v5.1</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/blog/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body, h1, *{
+            font-family: "Plus Jakarta Sans", sans-serif !important;
+        }
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .author p{
+        margin:0 !important
+      }
+      #product-categories a{
+        padding: 12px 24px 12px 24px !important;
+        border-radius: 24px;
+        border: 1px solid #D4D4D8;
+        margin-right: 15px;
+      }
+      #product-categories a.active{
+        background: #3F3F46;
+        color: #fff;
+        border: none;
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="views/blog.css" rel="stylesheet">
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="row g-5">
+        <div class="col-md-12" style="padding: 20px 0; color:">
+            <a style="color:grey;" href="/"><< Back</a>
+        </div>
+        <div class="row g-1">
+            <img src="{{blogPost['image']}}" alt="" style="border-radius: 90px;">
+
+            <div class="row g-2" style="padding-left:30px;">
+                <div class="col-md-12" style="display:flex;">
+                    <p><b>{{blogPost['categoryName']}}</b></p>&nbsp;|&nbsp;
+                    <p>{{blogPost['lastPublicationDate']}}</p>&nbsp;&#x2022&nbsp;
+                    <p>{{blogPost['readingMins']}} min read</p>
+                </div>
+            </div>
+
+            <div style="margin:0;border-bottom:2px solid lightgrey;">
+                {{blogPost['title']|raw}}
+            </div>
+            <div class="row mb-2" style="margin-top:50px;">
+                <div class="col-md-2 display-block author">
+                    <img width="100" src="{{blogPost['author']['image']}}">
+                    <p><b>{{blogPost['author']['name']}}</b></p>
+                    <p style="font-size:10px">{{blogPost['author']['summary']|raw}}</p>
+                </div>
+                <div class="col-md-10">
+                    <article class="blog-post">
+                        {{blogPost['content']|raw}}
+                    </article>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-5" id="product-categories">
+          <div class="col-md-12" style="padding: 20px 0; color:">
+            <h3>Trending now</h3>
+            <br>
+            {% for category in blogPost['productCategories'] %}
+              <a style="text-decoration:none;" class="p-2 link-secondary">{{ category.name|e }}</a>
+            {% endfor %}          
+          </div>
+        </div>
+    </div>
+  </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#product-categories a").first().addClass("active");
+});
+</script>
+</html>

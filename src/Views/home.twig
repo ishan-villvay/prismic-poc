@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Blog Template · Bootstrap v5.1</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/blog/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      .blog-container {
+        width: 100%; /* Adjust width as needed */
+        margin: 0 auto;
+      }
+
+      .blog-posts {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .blog-post {
+        width: 48%;
+        box-sizing: border-box; /* Include padding/border in width calculation */
+        margin: 10px; /* Adjust spacing as needed */
+      }
+
+      ul.categories li:hover{
+        background-color: #eee;
+      }
+
+      ul.categories li{
+        cursor: pointer;
+        padding: 0 0 0 5px;
+      }
+
+      ul.categories li.active{
+        font-weight: bold;
+      }
+
+      /* Optional: Style individual blog post elements */
+      .blog-post h3 {
+        /* ... your styles for title */
+      }
+
+      .blog-post p {
+        /* ... your styles for excerpt */
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="views/blog.css" rel="stylesheet">
+  </head>
+  <body>
+
+<main class="container" style="margin-top:50px;">
+<h3 class="mb-0">Featured post</h3>
+  <div class="p-2 p-md-3 mb-4 text-white rounded bg-dark">
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <img src="{{featuredBlogPost['image']|e}}" style="max-width:100%;" alt="test">
+    </div>
+    <div class="col-md-6">
+      <h1 class="display-4 fst-italic">{{featuredBlogPost['title']|raw}}</h1>
+      <p class="lead my-3">{{featuredBlogPost['contentSummary']|e}}...</p>      
+      <p class="lead mb-0"><a href="{{featuredBlogPost['uid']}}" class="text-white fw-bold">Continue reading...</a></p>
+    </div>
+    </div>
+  </div>
+
+  <h3 class="mb-0">Buying Guides</h3>
+  <div class="row mb-2">
+  {% for buyingGuidePost in buyingGuidePosts %}
+    <div class="col-md-6">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col-md-8 p-4 d-flex flex-column position-static">
+          <h4 class="mb-0">{{buyingGuidePost['title']}}</h4>
+          <div class="mb-1 text-muted">{{buyingGuidePost['publicationDate']}}</div>
+          <br>
+          <p class="card-text mb-auto">{{buyingGuidePost['contentSummary']}}</p>
+          <a href="{{buyingGuidePost['uid']}}" class="stretched-link">Continue reading</a>
+        </div>
+        <div class="col-md-4 d-none d-lg-block">
+          <div 
+            style="background-image:url({{buyingGuidePost['image']|e}});max-width:100%;width: 100%;height: 100%;background-position: center center;background-size: cover;"
+            alt="test">
+        </div>
+      </div>
+    </div>        
+    </div>        
+  {% endfor %} 
+  </div>
+
+
+  <h3 style="margin-bottom:20px;">All categories</h3>
+  <div class="row mb-2">
+    <div class="col-md-2">
+      <p>Filter by</p>
+      <ul class="categories">
+        <li cat-id="all"><a style="text-decoration:none;" class="p-2 link-secondary">All articles</a></li>
+      {% for category in categories %}
+        <li cat-id="{{category.id}}"><a style="text-decoration:none;" class="p-2 link-secondary">{{ category.name|e }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-10 ">
+        <div class="blog-container" id="filter-blogs">
+            <div class="blog-posts"></div>        
+        </div>        
+    </div>
+  </div>
+
+</main>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("ul.categories li").first().addClass("active");
+    let categoryId = $("ul.categories li").first().attr("cat-id");
+
+    var blogContainer = $('#filter-blogs .blog-posts');
+    var blogPostSection = $('<div class="blog-post"></div>');
+    var blogPostContent = `<p>Loading...</p>`;
+    blogPostSection.html(blogPostContent);
+    blogContainer.append(blogPostSection);
+
+    $.ajax({url: "/categories/"+categoryId + "?foo=bar", success: function(result){
+      console.log(result); 
+      showFilteredBlogPosts(JSON.parse(result));
+    }});
+});
+
+$("ul.categories li").click(function(){
+  $("ul.categories li").removeClass("active");
+  $('#filter-blogs .blog-posts').empty();
+
+  var blogContainer = $('#filter-blogs .blog-posts');
+  var blogPostSection = $('<div class="blog-post"></div>');
+  var blogPostContent = `<p>Loading...</p>`;
+  blogPostSection.html(blogPostContent);
+  blogContainer.append(blogPostSection);
+  
+  let categoryId = $(this).attr("cat-id");
+
+  $("ul.categories").find(`[cat-id='${categoryId}']`).first().addClass("active");
+
+   $.ajax({url: "/categories/"+categoryId + "?foo=bar", success: function(result){
+    showFilteredBlogPosts(JSON.parse(result));
+  }});
+});
+
+function showFilteredBlogPosts(blogPostsData){ 
+    $('#filter-blogs .blog-posts').empty();
+
+    if(blogPostsData.length == 0){
+      var blogContainer = $('#filter-blogs .blog-posts');
+      var blogPostSection = $('<div class="blog-post"></div>');
+      var blogPostContent = `<p>No Blog posts found.</p>`;
+      blogPostSection.html(blogPostContent);
+      blogContainer.append(blogPostSection);
+      return;
+    }
+
+    var blogContainer = $('#filter-blogs .blog-posts');
+
+    $.each(blogPostsData, function(index, postData) {
+        // Create a new .blog-posts section
+        var blogPostSection = $('<div class="blog-post"></div>');
+
+        // Populate the section with the blog post content
+        var blogPostContent = `
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col-md-8 p-4 d-flex flex-column position-static">
+                        <h4 class="mb-0">${postData.title}</h4>
+                        <div class="mb-1 text-muted">${postData.publicationDate}</div>
+                        <br>
+                        <p class="card-text mb-auto">${postData.contentSummary}...</p>
+                        <a href="${postData.uid}" class="stretched-link">Continue reading</a>
+                    </div>
+                    <div class="col-md-4 d-none d-lg-block">
+                        <div class="image-container" style="background-image: url(${postData.image}); max-width: 100%; width: 100%; height: 100%; background-position: center center; background-size: cover;" alt="test"></div>
+                    </div>
+                </div>
+        `;
+
+        // Append the content to the blog post section
+        blogPostSection.html(blogPostContent);
+
+        // Append the blog post section to the parent container
+        blogContainer.append(blogPostSection);
+    });
+}
+
+</script>
+</html>
